@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200" width="400" height="200">
+<style>
+  .silhouette fill="#1a1a2e" stroke="#0f3460" stroke-width="2"/>
+  .line stroke="#e94560" stroke-width="2" fill="none"/>
+  .fill fill="#16213e"/>
+  .accent fill="#e94560"/>
+</style>
+
+<defs><linearGradient id="sky" x1="0%" y1="0%" x2="0%" y2="100%">
+  <stop offset="0%" style="stop-color:#0f3460;stop-opacity:1" />
+  <stop offset="100%" style="stop-color:#16213e;stop-opacity:1" />
+</linearGradient></defs>
+<rect width="400" height="200" fill="url(#sky)"/>
+<ellipse cx="75" cy="79" rx="35" ry="17.5" fill="#fff" opacity="0.1"/>
+<ellipse cx="180" cy="75" rx="25" ry="12.5" fill="#fff" opacity="0.1"/>
+<ellipse cx="344" cy="70" rx="24" ry="12.0" fill="#fff" opacity="0.1"/>
+<ellipse cx="254" cy="42" rx="40" ry="20.0" fill="#fff" opacity="0.1"/>
+<ellipse cx="124" cy="64" rx="39" ry="19.5" fill="#fff" opacity="0.1"/>
+<ellipse cx="222" cy="52" rx="36" ry="18.0" fill="#fff" opacity="0.1"/>
+
+</svg>

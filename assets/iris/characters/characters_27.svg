@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 300" width="200" height="300">
+<style>
+  .silhouette fill="#1a1a2e" stroke="#0f3460" stroke-width="2"/>
+  .line stroke="#e94560" stroke-width="2" fill="none"/>
+  .fill fill="#16213e"/>
+  .accent fill="#e94560"/>
+</style>
+
+<ellipse cx="100" cy="50" rx="20" ry="33" class="silhouette"/>
+<path d="M 78 83 Q 72 142 76 201 L 124 201 Q 128 142 122 83 Z" class="silhouette"/>
+<path d="M 76 201 Q 70 241 80 282 L 96 282 L 98 206 Z" class="silhouette"/>
+<path d="M 124 201 Q 130 241 120 282 L 104 282 L 102 206 Z" class="silhouette"/>
+<path d="M 78 93 Q 53 133 48 173 L 58 173 Q 53 133 83 103" class="silhouette"/>
+<path d="M 122 93 Q 147 133 152 173 L 142 173 Q 147 133 117 103" class="silhouette"/>
+<rect x="0" y="260" width="200" height="40" fill="url(#fog)" opacity="0.3"/>
+
+</svg>

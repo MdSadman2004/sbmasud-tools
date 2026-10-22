@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60" width="120" height="60">
+<style>
+  .silhouette fill="#1a1a2e" stroke="#0f3460" stroke-width="2"/>
+  .line stroke="#e94560" stroke-width="2" fill="none"/>
+  .fill fill="#16213e"/>
+  .accent fill="#e94560"/>
+</style>
+
+<ellipse cx="60" cy="28" rx="52" ry="15" class="fill" stroke="#e94560" stroke-width="1.5"/>
+<path d="M 53 45 L 62 55 L 71 45" class="fill" stroke="#e94560" stroke-width="1.5"/>
+
+</svg>

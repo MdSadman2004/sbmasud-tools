@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+<style>
+  .silhouette fill="#1a1a2e" stroke="#0f3460" stroke-width="2"/>
+  .line stroke="#e94560" stroke-width="2" fill="none"/>
+  .fill fill="#16213e"/>
+  .accent fill="#e94560"/>
+</style>
+
+<line x1="59" y1="50" x2="86" y2="52" class="line"/>
+<line x1="57" y1="57" x2="77" y2="77" class="line"/>
+<line x1="52" y1="58" x2="61" y2="91" class="line"/>
+<line x1="46" y1="57" x2="33" y2="83" class="line"/>
+<line x1="42" y1="54" x2="14" y2="69" class="line"/>
+<line x1="41" y1="49" x2="8" y2="46" class="line"/>
+<line x1="42" y1="43" x2="22" y2="26" class="line"/>
+<line x1="49" y1="40" x2="45" y2="10" class="line"/>
+<line x1="53" y1="41" x2="64" y2="13" class="line"/>
+<line x1="57" y1="45" x2="79" y2="30" class="line"/>
+
+</svg>

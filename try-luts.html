@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Try the LUTs in your browser - S. B. Masud</title>
+<meta name="description" content="Preview five cinematic LUTs on your own photo in the browser, or load any 33-point .cube file. Nothing is uploaded.">
+<meta property="og:title" content="Try the LUTs in your browser - S. B. Masud">
+<meta property="og:description" content="Preview five cinematic LUTs on your own photo in the browser, or load any 33-point .cube file. Nothing is uploaded.">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23f6f1e7'/%3E%3Cpath d='M8 24V8h9a5 5 0 0 1 0 10H8' fill='none' stroke='%23a94f33' stroke-width='2.4'/%3E%3C/svg%3E">
+
+<style>
+.tool{display:grid;grid-template-columns:1fr 320px;gap:36px;padding:48px 0 72px}
+.stage-wrap{background:#0f1115;border:1px solid var(--line);position:relative;min-height:300px}
+.stage-wrap canvas{display:block;width:100%;height:auto}
+.panel{border:1px solid var(--line);background:var(--paper);padding:22px}
+.panel h3{font:600 12px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.look{display:block;width:100%;text-align:left;background:transparent;border:1px solid var(--line);padding:11px 13px;margin-bottom:8px;cursor:pointer;font:400 15px/1.3 var(--sans);color:var(--ink)}
+.look small{display:block;color:var(--muted);font-size:12px;margin-top:3px}
+.look:hover{border-color:var(--clay)}
+.look[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:var(--sand)}
+.look[aria-pressed="true"] small{color:rgba(246,241,231,.7)}
+.slider{width:100%;margin:10px 0 4px}
+.row{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;color:var(--muted)}
+.file{display:block;margin-top:14px;font-size:13px;color:var(--ink2)}
+.file input{margin-top:6px;display:block;width:100%;font-size:12px}
+.hint{font-size:12px;color:var(--muted);line-height:1.6;margin-top:14px;border-top:1px solid var(--line2);padding-top:12px}
+.btnline{display:inline-block;margin-top:10px;padding:11px 16px;background:var(--ink);color:var(--sand);font:600 13px/1 var(--sans);border:0;cursor:pointer}
+.btnline:hover{background:var(--clay)}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;margin-top:32px}
+.tile{background:var(--paper);border:1px solid var(--line);padding:10px;text-align:center}
+.tile img{width:100%;height:150px;object-fit:contain}
+.tile span{display:block;font:400 11px/1.4 var(--mono);color:var(--muted);margin-top:6px;word-break:break-all}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.filters button{background:transparent;border:1px solid var(--line);padding:8px 14px;font:400 14px/1 var(--sans);cursor:pointer;color:var(--ink2)}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--sand);border-color:var(--ink)}
+@media (max-width:860px){.tool{grid-template-columns:1fr}}
+</style></head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site">
+  <div class="wrap">
+    <a class="wordmark" href="index.html">S. B. <span>Masud</span></a>
+    <nav class="top">
+      <a href="index.html#tools">Tools</a>
+      <a href="try-luts.html">Try</a>
+      <a href="iris-gallery.html">Gallery</a>
+      <a href="free.html">Free</a>
+      <a href="licence.html">Licence</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+<div class="product-head">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">Catalogue</a> / Preview</div>
+    <h1>Try the LUTs, right here.</h1>
+    <p class="lede">Five free looks, applied to your own photo in the browser. Nothing is
+    uploaded: the image never leaves this tab. Drop in any 33-point <code>.cube</code> file you
+    already own and it will render that too.</p>
+  </div>
+</div>
+<div class="wrap">
+  <div class="tool">
+    <div>
+      <div class="stage-wrap" id="stage-wrap"><canvas id="stage" width="1200" height="800"></canvas></div>
+      <div class="row" style="margin-top:10px"><span id="lut-msg">Select a look to begin.</span><span id="timing"></span></div>
+    </div>
+    <aside class="panel">
+      <h3>Looks</h3>
+      <button class="look" id="look-cool-cinema" aria-pressed="false">Cool Cinema<small>Blue shadows, cool skin, night interiors</small></button>
+      <button class="look" id="look-warm-cinema" aria-pressed="false">Warm Cinema<small>Amber highlights, warm skin</small></button>
+      <button class="look" id="look-neutral-clean" aria-pressed="false">Neutral Clean<small>Honest colour, a little contrast</small></button>
+      <button class="look" id="look-teal-orange" aria-pressed="false">Teal-Orange<small>Cool shadows against warm faces</small></button>
+      <button class="look" id="look-pastel" aria-pressed="false">Pastel<small>Lifted blacks, soft saturation</small></button>
+      <h3 style="margin-top:22px">Strength</h3>
+      <input class="slider" id="intensity" type="range" min="0" max="100" value="100" aria-label="LUT strength">
+      <div class="row"><span>0%</span><span id="intensity-out">100%</span><span>100%</span></div>
+
+      <h3 style="margin-top:22px">Your files</h3>
+      <label class="file">Photo<input type="file" id="file-image" accept="image/*"></label>
+      <label class="file">.cube LUT<input type="file" id="file-lut" accept=".cube,text/plain"></label>
+      <button class="btnline" id="download">Download this preview</button>
+      <p class="hint">Runs on your machine: no upload, no server, no account. The previewer
+      interpolates a 33x33x33 cube per pixel, which is the same thing Resolve does, so what you
+      see here is what the file does in an editor.</p>
+    </aside>
+  </div>
+</div>
+</main>
+<footer class="site">
+  <div class="wrap">
+    <div>&copy; <span data-year>2026</span> S. B. Masud. Digital goods, delivered instantly.</div>
+    <div><a href="licence.html">Licence</a> &middot; <a href="free.html">Free samples</a></div>
+  </div>
+</footer>
+<script src="assets/config.js"></script>
+<script src="assets/site.js"></script>
+<script>
+var LOOKS = [["cool-cinema", "Cool Cinema", "Blue shadows, cool skin, night interiors"], ["warm-cinema", "Warm Cinema", "Amber highlights, warm skin"], ["neutral-clean", "Neutral Clean", "Honest colour, a little contrast"], ["teal-orange", "Teal-Orange", "Cool shadows against warm faces"], ["pastel", "Pastel", "Lifted blacks, soft saturation"]];
+
+var state = { lut: null, lutName: '', intensity: 1.0, img: null, w: 0, h: 0, busy: false };
+
+function el(id) { return document.getElementById(id); }
+
+function makeTestFrame() {
+  var c = document.createElement('canvas');
+  c.width = 1200; c.height = 800;
+  var x = c.getContext('2d');
+  var g = x.createLinearGradient(0, 0, 1200, 800);
+  g.addColorStop(0, '#2b3a4a'); g.addColorStop(0.45, '#8a6a52'); g.addColorStop(1, '#d9c9a8');
+  x.fillStyle = g; x.fillRect(0, 0, 1200, 800);
+  var patches = ['#e8c4a0', '#a9764f', '#6b4a33', '#3f6b45', '#7fa7c9', '#d4783c', '#b03a3a', '#2a2f45'];
+  patches.forEach(function (col, i) {
+    x.fillStyle = col;
+    var w = 1200 / patches.length;
+    x.fillRect(i * w, 600, w, 120);
+  });
+  var ramp = x.createLinearGradient(0, 0, 1200, 0);
+  ramp.addColorStop(0, '#000'); ramp.addColorStop(1, '#fff');
+  x.fillStyle = ramp; x.fillRect(0, 740, 1200, 60);
+  x.globalAlpha = 0.5; x.fillStyle = '#ffffff';
+  x.beginPath(); x.arc(300, 260, 150, 0, 6.284); x.fill();
+  x.fillStyle = '#0d1117';
+  x.beginPath(); x.arc(880, 330, 220, 0, 6.284); x.fill();
+  x.globalAlpha = 1;
+  return c;
+}
+
+function drawSource(img) {
+  var canvas = el('stage');
+  var maxW = Math.min(1100, Math.round(window.innerWidth - 48));
+  var scale = Math.min(1, maxW / img.width);
+  canvas.width = Math.round(img.width * scale);
+  canvas.height = Math.round(img.height * scale);
+  var ctx = canvas.getContext('2d');
+  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  state.w = canvas.width; state.h = canvas.height;
+  var holder = el('stage-wrap');
+  holder.style.aspectRatio = (state.w / state.h).toFixed(4);
+}
+
+function trilinear(lut, N, r, g, b) {
+  var x = r * (N - 1), y = g * (N - 1), z = b * (N - 1);
+  var x0 = x | 0, y0 = y | 0, z0 = z | 0;
+  var x1 = x0 < N - 1 ? x0 + 1 : x0, y1 = y0 < N - 1 ? y0 + 1 : y0, z1 = z0 < N - 1 ? z0 + 1 : z0;
+  var fx = x - x0, fy = y - y0, fz = z - z0;
+  function at(xi, yi, zi) {
+    var i = ((zi * N + yi) * N + xi) * 3;
+    return [lut[i] / 255, lut[i + 1] / 255, lut[i + 2] / 255];
+  }
+  var c000 = at(x0, y0, z0), c100 = at(x1, y0, z0), c010 = at(x0, y1, z0), c110 = at(x1, y1, z0);
+  var c001 = at(x0, y0, z1), c101 = at(x1, y0, z1), c011 = at(x0, y1, z1), c111 = at(x1, y1, z1);
+  var out = [0, 0, 0];
+  for (var k = 0; k < 3; k++) {
+    var a = c000[k] + (c100[k] - c000[k]) * fx;
+    var bb = c010[k] + (c110[k] - c010[k]) * fx;
+    var c = c001[k] + (c101[k] - c001[k]) * fx;
+    var d = c011[k] + (c111[k] - c011[k]) * fx;
+    var e = a + (bb - a) * fy;
+    var f = c + (d - c) * fy;
+    out[k] = e + (f - e) * fz;
+  }
+  return out;
+}
+
+function render() {
+  if (!state.img) return;
+  if (state.busy) return;
+  state.busy = true;
+  var canvas = el('stage');
+  var ctx = canvas.getContext('2d', { willReadFrequently: true });
+  var src = document.createElement('canvas');
+  src.width = state.w; src.height = state.h;
+  src.getContext('2d').drawImage(state.img, 0, 0, state.w, state.h);
+  var sdata = src.getContext('2d').getImageData(0, 0, state.w, state.h);
+  var d = sdata.data;
+  var t = state.intensity;
+  var began = performance.now();
+  if (state.lut && t > 0) {
+    var lut = state.lut, N = 33;
+    for (var i = 0; i < d.length; i += 4) {
+      var r = d[i] / 255, g = d[i + 1] / 255, b = d[i + 2] / 255;
+      var o = trilinear(lut, N, r, g, b);
+      d[i] = (r * (1 - t) + o[0] * t) * 255;
+      d[i + 1] = (g * (1 - t) + o[1] * t) * 255;
+      d[i + 2] = (b * (1 - t) + o[2] * t) * 255;
+    }
+  }
+  ctx.putImageData(sdata, 0, 0);
+  var ms = Math.round(performance.now() - began);
+  el('timing').textContent = state.lut ? (ms + ' ms on ' + state.w + 'x' + state.h) : 'original';
+  state.busy = false;
+}
+
+function loadLut(slug, name) {
+  return fetch('assets/luts/' + slug + '.bin').then(function (r) { return r.arrayBuffer(); })
+    .then(function (buf) {
+      state.lut = new Uint8Array(buf);
+      state.lutName = name;
+      el('lut-msg').textContent = name + ' applied to the frame below.';
+      LOOKS.forEach(function (l) {
+        var b = el('look-' + l[0]);
+        if (b) b.setAttribute('aria-pressed', l[0] === slug ? 'true' : 'false');
+      });
+      render();
+    });
+}
+
+function parseCube(text) {
+  var size = 0, rows = [];
+  text.split(/\r?\n/).forEach(function (line) {
+    line = line.trim();
+    if (!line || line[0] === '#') return;
+    if (line.indexOf('LUT_3D_SIZE') === 0) { size = parseInt(line.split(/\s+/)[1], 10); return; }
+    if (/^[-\d.]/.test(line)) {
+      var p = line.split(/\s+/);
+      if (p.length === 3) rows.push(p);
+    }
+  });
+  if (!size || rows.length !== size * size * size) {
+    throw new Error('expected ' + (size * size * size) + ' rows for size ' + size + ', found ' + rows.length);
+  }
+  var out = new Uint8Array(rows.length * 3);
+  for (var i = 0; i < rows.length; i++) {
+    for (var c = 0; c < 3; c++) {
+      out[i * 3 + c] = Math.max(0, Math.min(255, Math.round(parseFloat(rows[i][c]) * 255)));
+    }
+  }
+  return { data: out, size: size };
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  var test = makeTestFrame();
+  var img = new Image();
+  img.onload = function () { state.img = img; drawSource(img); render(); };
+  img.src = test.toDataURL('image/png');
+
+  LOOKS.forEach(function (l) {
+    el('look-' + l[0]).addEventListener('click', function () { loadLut(l[0], l[1]); });
+  });
+
+  el('intensity').addEventListener('input', function (e) {
+    state.intensity = parseInt(e.target.value, 10) / 100;
+    el('intensity-out').textContent = e.target.value + '%';
+    render();
+  });
+
+  el('file-image').addEventListener('change', function (e) {
+    var f = e.target.files && e.target.files[0];
+    if (!f) return;
+    var url = URL.createObjectURL(f);
+    var im = new Image();
+    im.onload = function () { state.img = im; drawSource(im); render(); URL.revokeObjectURL(url); };
+    im.src = url;
+  });
+
+  el('file-lut').addEventListener('change', function (e) {
+    var f = e.target.files && e.target.files[0];
+    if (!f) return;
+    f.text().then(function (t) {
+      var parsed;
+      try { parsed = parseCube(t); } catch (err) {
+        el('lut-msg').textContent = 'Could not read that .cube: ' + err.message;
+        return;
+      }
+      if (parsed.size !== 33) {
+        el('lut-msg').textContent = 'That LUT is size ' + parsed.size + '. This previewer renders 33-point cubes.';
+        return;
+      }
+      state.lut = parsed.data; state.lutName = f.name;
+      LOOKS.forEach(function (l) { el('look-' + l[0]).setAttribute('aria-pressed', 'false'); });
+      el('lut-msg').textContent = 'Loaded ' + f.name;
+      render();
+    });
+  });
+
+  el('download').addEventListener('click', function () {
+    var c = el('stage');
+    c.toBlob(function (blob) {
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'preview-' + (state.lutName || 'original').replace(/[^a-z0-9]+/gi, '-').toLowerCase() + '.png';
+      a.click();
+      setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+    }, 'image/png');
+  });
+
+  var first = LOOKS[0];
+  loadLut(first[0], first[1]);
+});
+</script>
+</body>
+</html>
